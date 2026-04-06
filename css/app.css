@@ -80,8 +80,7 @@ a { color: inherit; text-decoration: none; }
 /* ── LAYOUT ─────────────────────────────────────────────── */
 #app {
   position: relative; z-index: 1;
-  display: grid;
-  grid-template-columns: 220px 1fr;
+  display: flex;
   min-height: 100vh;
 }
 
