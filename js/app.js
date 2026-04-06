@@ -4,9 +4,9 @@
 
 // ── ITEMS CATALOG ─────────────────────────────────────────
 const ITEMS = {
-  bedding:  ['Towels','Laundry Bag','Pillow Case','Flat or Fitted Sheet','Blanket','Duvet / Duvet Cover','Other'],
-  clothing: ['Pilot Shirt','Crew Jacket','Uniform Pants','Vest / Gilet','Tie / Scarf','Other'],
-  kitchen:  ['Apron','Kitchen Towel','Oven Mitt','Table Linen','Napkins','Other']
+  bedding:  ['Towels','Pillow Case','Flat or Fitted Sheet','Duvet Cover','Duvet','Comforter','Blanket','Delicate Cashmere Blanket','Delicate Dry Clean Blanket','Other'],
+  clothing: ['Pilot Shirt','Business Shirt','Blouse','Polo Shirt','Pant','Jacket','Socks per pair','T-Shirt','Undershort','Short','Dress','Panties','Skirt','Sweater','Tie','Other'],
+  kitchen:  ['Dishcloth','Napkins','Linen Napkins','Tablecloth','Linen Tablecloth','Placemat','Pot Holder','Apron','Other']
 };
 
 // ── FBO LIST ──────────────────────────────────────────────
