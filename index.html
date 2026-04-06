@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline' 'unsafe-eval' data: blob:; script-src * 'unsafe-inline' 'unsafe-eval'; connect-src *;">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flypal — Aviation Linen Services</title>
+  <link rel="stylesheet" href="css/app.css">
+  <!-- Supabase CDN -->
+  
+</head>
+<body>
+
+<div class="bg-layer"></div>
+<div class="grid-overlay"></div>
+
+<div id="app">
+
+  <!-- ══ SIDEBAR ══════════════════════════════════════════ -->
+  <aside class="sidebar">
+
+    <div class="sidebar-logo">
+      <div class="logo-lockup">
+        <div class="logo-emblem"></div>
+        <div class="logo-name">FLYPAL</div>
+      </div>
+      <div class="logo-tagline">Aviation Linen Services</div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-group-label">Operations</div>
+
+      <div class="nav-item" data-view="dashboard" onclick="showView('dashboard')">
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="none">
+          <rect x="1" y="1" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.2"/>
+          <rect x="9" y="1" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.2"/>
+          <rect x="1" y="9" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.2"/>
+          <rect x="9" y="9" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.2"/>
+        </svg>
+        Dashboard
+        <span class="nav-badge" id="badge-pending">0</span>
+      </div>
+
+      <div class="nav-item" data-view="order" onclick="showView('order')">
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="none">
+          <path d="M8 1L14 4.5V11.5L8 15L2 11.5V4.5L8 1Z" stroke="currentColor" stroke-width="1.2"/>
+          <path d="M8 8V15M8 8L14 4.5M8 8L2 4.5" stroke="currentColor" stroke-width="1.2"/>
+        </svg>
+        New Order
+      </div>
+
+      <div class="nav-item" data-view="tracking" onclick="showView('tracking')">
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="none">
+          <circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.2"/>
+          <circle cx="8" cy="8" r="2" fill="currentColor"/>
+          <path d="M8 2V4M8 12V14M2 8H4M12 8H14" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+        </svg>
+        Live Tracking
+        <span class="nav-badge" id="badge-transit" style="display:none">1</span>
+      </div>
+
+      <div class="nav-item" data-view="history" onclick="showView('history')">
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="none">
+          <path d="M2 4h12M2 8h8M2 12h10" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+        </svg>
+        Order History
+      </div>
+
+      <div class="nav-group-label" style="margin-top:12px">Account</div>
+
+      <div class="nav-item">
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="none">
+          <path d="M8 2a3 3 0 100 6 3 3 0 000-6zM2 14c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+        </svg>
+        FBO Clients
+      </div>
+
+      <div class="nav-item">
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="none">
+          <circle cx="8" cy="8" r="2.5" stroke="currentColor" stroke-width="1.2"/>
+          <path d="M8 1v2M8 13v2M1 8h2M13 8h2M3.1 3.1l1.4 1.4M11.5 11.5l1.4 1.4M3.1 12.9l1.4-1.4M11.5 4.5l1.4-1.4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+        </svg>
+        Settings
+      </div>
+    </nav>
+
+    <div class="sidebar-user">
+      <div class="user-avatar">FP</div>
+      <div>
+        <div class="user-name">Flypal Team</div>
+        <div class="user-role">Operations</div>
+      </div>
+    </div>
+
+  </aside>
+
+  <!-- ══ MAIN ═════════════════════════════════════════════ -->
+  <div class="main-area">
+
+    <!-- Topbar -->
+    <div class="topbar">
+      <div class="breadcrumb">
+        <span class="bc-home">Flypal</span>
+        <span class="bc-sep">/</span>
+        <span class="bc-page" id="bc-page">Dashboard</span>
+      </div>
+      <div class="topbar-right">
+        <div class="sys-pill">
+          <div class="sys-dot"></div>
+          All Systems Active
+        </div>
+      </div>
+    </div>
+
+    <!-- ── PAGE: DASHBOARD ─────────────────────────────── -->
+    <div id="page-dashboard" class="view-page page">
+
+      <div class="page-header">
+        <div>
+          <div class="page-title">Operations <em>Dashboard</em></div>
+          <div class="page-sub">Real-time order overview — All FBO locations</div>
+        </div>
+        <button class="btn-gold" onclick="showView('order')">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1v10M1 6h10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+          New Order
+        </button>
+      </div>
+
+      <!-- KPIs -->
+      <div class="kpi-strip">
+        <div class="kpi-card hi">
+          <div class="kpi-label">Pending</div>
+          <div class="kpi-val" id="kpi-pending">—</div>
+          <div class="kpi-note">Awaiting response</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Accepted</div>
+          <div class="kpi-val" id="kpi-accepted">—</div>
+          <div class="kpi-note up">Active</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">In Transit</div>
+          <div class="kpi-val" id="kpi-transit">—</div>
+          <div class="kpi-note blue">Live GPS</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Delivered</div>
+          <div class="kpi-val" id="kpi-delivered">—</div>
+          <div class="kpi-note up">Completed</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Rush Orders</div>
+          <div class="kpi-val" id="kpi-rush">—</div>
+          <div class="kpi-note warn">+50% fee</div>
+        </div>
+      </div>
+
+      <!-- Orders Table -->
+      <div class="panel">
+        <div class="panel-head">
+          <div class="panel-title">Active Orders</div>
+          <div class="tabs" style="margin-bottom:0;border-bottom:none">
+            <div class="tab-btn active" onclick="filterOrders('all')">All</div>
+            <div class="tab-btn" onclick="filterOrders('pending')">Pending</div>
+            <div class="tab-btn" onclick="filterOrders('accepted')">Accepted</div>
+            <div class="tab-btn" onclick="filterOrders('in_transit')">In Transit</div>
+          </div>
+        </div>
+        <div class="panel-body-flush">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Tail #</th>
+                <th>FBO / Location</th>
+                <th>Delivery</th>
+                <th>CSR</th>
+                <th>Status</th>
+                <th>Type</th>
+              </tr>
+            </thead>
+            <tbody id="orders-tbody">
+              <tr><td colspan="6" style="text-align:center;padding:40px;color:var(--steel)">Loading orders...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ── PAGE: NEW ORDER ──────────────────────────────── -->
+    <div id="page-order" class="view-page page" style="display:none">
+
+      <div class="page-header">
+        <div>
+          <div class="page-title">Place <em>New Order</em></div>
+          <div class="page-sub">Aviation Linen Manifest — FBO Service Request</div>
+        </div>
+        <button class="btn-ghost" onclick="resetOrderForm()">Clear Form</button>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 340px;gap:20px;align-items:start">
+
+        <!-- Left: Form panels -->
+        <div>
+
+          <!-- 01 Service Type -->
+          <div class="panel">
+            <div class="panel-head">
+              <div class="panel-title">Service Type</div>
+              <div class="panel-sub">01 / 03</div>
+            </div>
+            <div class="panel-body">
+              <div class="service-grid">
+                <div class="service-card" id="svc-regular" onclick="selectService('regular')">
+                  <div class="service-check-row">
+                    <div class="service-radio"><div class="service-radio-inner"></div></div>
+                    <span class="service-tag tag-regular">No Surcharge</span>
+                  </div>
+                  <div class="service-name">Regular Service</div>
+                  <div class="service-desc">Standard 48-hour turnaround</div>
+                </div>
+                <div class="service-card rush-active" id="svc-rush" onclick="selectService('rush')">
+                  <div class="service-check-row">
+                    <div class="service-radio"><div class="service-radio-inner"></div></div>
+                    <span class="service-tag tag-rush">+50% Surcharge</span>
+                  </div>
+                  <div class="service-name">Rush / Overnight</div>
+                  <div class="service-desc">Under 24h · Sunday · Holiday</div>
+                </div>
+              </div>
+
+              <!-- Rush Alert -->
+              <div class="rush-alert show" id="rush-alert">
+                <div class="alert-tri"></div>
+                <div>
+                  <div class="alert-ttl">Rush Service Fee — +50% Applies</div>
+                  <div class="alert-msg" id="alert-msg">A 50% surcharge will be applied and included in the FBO confirmation email.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 02 Order Information -->
+          <div class="panel">
+            <div class="panel-head">
+              <div class="panel-title">Order Information</div>
+              <div class="panel-sub">02 / 03</div>
+            </div>
+            <div class="panel-body">
+              <div class="field-grid field-grid-2" style="margin-bottom:14px">
+                <div class="field">
+                  <label class="field-label">Tail Number <span class="req">*</span></label>
+                  <input class="field-input" id="tail-input" type="text" placeholder="N-XXXX" oninput="updateSummary()">
+                </div>
+                <div class="field">
+                  <label class="field-label">Arriving Date <span class="req">*</span></label>
+                  <input class="field-input" id="arriving-date" type="date">
+                </div>
+              </div>
+
+              <div class="field-grid" style="margin-bottom:14px">
+                <div class="field">
+                  <label class="field-label">FBO / Location <span class="req">*</span></label>
+                  <select class="field-select" id="fbo-select" onchange="updateSummary()">
+                    <!-- Built by JS -->
+                  </select>
+                </div>
+              </div>
+
+              <div class="field-grid field-grid-2" style="margin-bottom:14px">
+                <div class="field">
+                  <label class="field-label">Delivery Date <span class="req">*</span></label>
+                  <input class="field-input" id="delivery-date" type="date" oninput="onDeliveryChange()">
+                </div>
+                <div class="field">
+                  <label class="field-label">Delivery Time <span class="req">*</span></label>
+                  <input class="field-input" id="delivery-time" type="time" oninput="onDeliveryChange()">
+                </div>
+              </div>
+
+              <div class="field-grid" style="margin-bottom:14px">
+                <div class="field">
+                  <label class="field-label">CSR Name <span class="req">*</span></label>
+                  <input class="field-input" id="csr-input" type="text" placeholder="Customer Service Representative" oninput="updateSummary()">
+                </div>
+              </div>
+
+              <div class="field-grid">
+                <div class="field">
+                  <label class="field-label">Special Instructions</label>
+                  <input class="field-input" id="notes-input" type="text" placeholder="Fragile items, hangers only, extra care...">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 03 Linen Items -->
+          <div class="panel">
+            <div class="panel-head">
+              <div class="panel-title">Linen Items</div>
+              <div class="panel-sub">03 / 03 — Optional</div>
+            </div>
+            <div class="panel-body">
+              <div style="margin-bottom:20px">
+                <div class="cat-label">Bedding</div>
+                <div id="cat-bedding"></div>
+              </div>
+              <div style="margin-bottom:20px">
+                <div class="cat-label">Clothing</div>
+                <div id="cat-clothing"></div>
+              </div>
+              <div>
+                <div class="cat-label">Kitchen</div>
+                <div id="cat-kitchen"></div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Right: Summary -->
+        <div style="position:sticky;top:76px">
+          <div class="panel">
+            <div class="panel-head">
+              <div class="panel-title">Order Summary</div>
+            </div>
+            <div class="panel-body">
+
+              <div class="sum-row"><span class="sum-key">Tail #</span><span class="sum-val gold" id="sum-tail">—</span></div>
+              <div class="sum-row"><span class="sum-key">FBO</span><span class="sum-val" id="sum-fbo" style="font-size:12px">—</span></div>
+              <div class="sum-row"><span class="sum-key">Delivery</span><span class="sum-val" id="sum-delivery">—</span></div>
+              <div class="sum-row"><span class="sum-key">CSR</span><span class="sum-val" id="sum-csr">—</span></div>
+              <hr class="sum-divider">
+              <div class="sum-row"><span class="sum-key">Service</span><span class="sum-val warn" id="sum-service">Rush / Overnight</span></div>
+              <div class="sum-row"><span class="sum-key">Surcharge</span><span class="sum-val warn" id="sum-surcharge">+50%</span></div>
+              <div class="sum-row"><span class="sum-key">Total Items</span><span class="sum-val gold" id="sum-items">0</span></div>
+              <hr class="sum-divider">
+              <div style="margin-bottom:16px">
+                <div class="sum-key" style="margin-bottom:8px">Items</div>
+                <div id="sum-breakdown"></div>
+              </div>
+
+              <button class="btn-gold btn-full" id="submit-btn" onclick="submitOrder()">
+                Submit Manifest
+              </button>
+              <div style="text-align:center;font-size:10px;color:var(--steel);margin-top:10px;line-height:1.6;font-family:'Barlow Condensed',sans-serif;letter-spacing:0.04em">
+                FBO notified via SMS + Email on submission
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── PAGE: LIVE TRACKING ──────────────────────────── -->
+    <div id="page-tracking" class="view-page page" style="display:none">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Live <em>Tracking</em></div>
+          <div class="page-sub">Real-time GPS — Active deliveries</div>
+        </div>
+      </div>
+      <div id="tracking-content">
+        <div style="text-align:center;padding:80px;color:var(--steel)">Loading...</div>
+      </div>
+    </div>
+
+    <!-- ── PAGE: HISTORY ────────────────────────────────── -->
+    <div id="page-history" class="view-page page" style="display:none">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Order <em>History</em></div>
+          <div class="page-sub">All orders — searchable and filterable</div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-head">
+          <div class="panel-title">All Orders</div>
+          <input class="field-input" style="width:220px;padding:7px 12px;font-size:12px" placeholder="Search tail, FBO..." oninput="searchHistory(this.value)">
+        </div>
+        <div class="panel-body-flush">
+          <table class="data-table">
+            <thead>
+              <tr><th>Tail #</th><th>FBO</th><th>Delivery</th><th>CSR</th><th>Status</th><th>Type</th></tr>
+            </thead>
+            <tbody id="history-tbody">
+              <tr><td colspan="6" style="text-align:center;padding:40px;color:var(--steel)">Loading history...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end main-area -->
+</div><!-- end app -->
+
+<!-- ══ ORDER DETAIL MODAL ════════════════════════════════ -->
+<div class="modal-overlay" id="order-modal">
+  <div class="modal">
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:4px">
+      <div>
+        <div class="modal-title" id="modal-tail">N-XXXX</div>
+        <div class="modal-sub" id="modal-fbo">FBO Location</div>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <span id="modal-status" class="badge badge-pending">Pending</span>
+        <span id="modal-service" class="badge badge-rush">Rush</span>
+      </div>
+    </div>
+
+    <hr class="sum-divider">
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px">
+      <div><div class="sum-key">Delivery</div><div style="font-size:13px;color:var(--white);margin-top:3px" id="modal-date">—</div></div>
+      <div><div class="sum-key">CSR</div><div style="font-size:13px;color:var(--white);margin-top:3px" id="modal-csr">—</div></div>
+    </div>
+
+    <div style="margin-bottom:16px">
+      <div class="sum-key" style="margin-bottom:8px">Items</div>
+      <div id="modal-items"></div>
+    </div>
+
+    <!-- Rejection panel (hidden by default) -->
+    <div id="reject-panel" style="display:none;margin-bottom:16px">
+      <hr class="sum-divider">
+      <div class="field" style="margin-bottom:12px">
+        <label class="field-label">Rejection Reason <span class="req">*</span></label>
+        <select class="field-select" id="reject-reason">
+          <option value="" disabled selected>Select reason...</option>
+          <option value="capacity">Capacity not available</option>
+          <option value="datetime">Date / time not viable</option>
+          <option value="location">Location not covered</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+      <div class="field">
+        <label class="field-label">Additional Notes</label>
+        <input class="field-input" id="reject-notes" type="text" placeholder="Optional details for the FBO...">
+      </div>
+    </div>
+
+    <div class="modal-actions" id="modal-actions"></div>
+  </div>
+</div>
+
+<!-- ══ TOAST CONTAINER ══════════════════════════════════ -->
+<div id="toast-container"></div>
+
+<!-- ══ SCRIPTS ══════════════════════════════════════════ -->
+<script src="js/config.js"></script>
+<script src="js/db.js"></script>
+<script src="js/app.js"></script>
+<!-- Google Maps — loaded only when API key is set -->
+<script>
+  if (FLYPAL_CONFIG.googleMaps.apiKey && !FLYPAL_CONFIG.googleMaps.apiKey.startsWith('YOUR_')) {
+    const s = document.createElement('script');
+    s.src = `https://maps.googleapis.com/maps/api/js?key=${FLYPAL_CONFIG.googleMaps.apiKey}&callback=Function.prototype`;
+    document.head.appendChild(s);
+  }
+
+  // Badge sync — keeps sidebar badge in sync with KPI numbers
+  setInterval(() => {
+    const pending = document.getElementById('kpi-pending')?.textContent;
+    const transit = document.getElementById('kpi-transit')?.textContent;
+    const badgePending = document.getElementById('badge-pending');
+    const badgeTransit = document.getElementById('badge-transit');
+    if (badgePending && pending && pending !== '—') badgePending.textContent = pending;
+    if (badgeTransit) {
+      const show = transit && transit !== '0' && transit !== '—';
+      badgeTransit.style.display = show ? 'inline-block' : 'none';
+      if (show) badgeTransit.textContent = transit;
+    }
+  }, 2000);
+</script>
+
+</body>
+</html>
